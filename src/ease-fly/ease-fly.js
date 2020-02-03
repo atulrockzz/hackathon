@@ -96,7 +96,7 @@ class EaseFly extends PolymerElement {
           <app-toolbar>
             <paper-icon-button class="menu-button" icon="menu" drawer-toggle hidden$="{{wideLayout}}">
             </paper-icon-button>
-            <p>Matrimony Website</p>
+            <p>Ease Fly</p>
           </app-toolbar>
           <app-toolbar class="tabs-bar" hidden$="{{!wideLayout}}">
             <!-- Nav on desktop: tabs -->
