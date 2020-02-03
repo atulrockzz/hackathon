@@ -150,7 +150,7 @@ class EaseFly extends PolymerElement {
       items: {
         type: Array,
         value: function () {
-          return [{ label: 'Home', route: 'home'}, { label: 'Login', route: 'login'}]
+          return [{ label: 'Home', route: 'home'}, { label: 'Login', route: 'login'},{ label: 'Book', route: 'book'}]
         }
       }
     };
