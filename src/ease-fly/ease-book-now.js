@@ -5,6 +5,8 @@ import '@polymer/paper-radio-button/paper-radio-button.js';
 import '@polymer/paper-radio-group/paper-radio-group.js';
 import '@polymer/paper-card/paper-card.js'
 import '@polymer/app-route/app-location.js';
+import '@polymer/iron-icon/iron-icon.js'
+
 /**
  * @customElement
  * @polymer
@@ -28,6 +30,7 @@ class EaseBookNow extends PolymerElement {
         }
       </style>
       <app-location route="{{route}}"></app-location>
+      <button on-click="_handleBack"><iron-icon icon="icons:arrow-back"></iron-icon></button>
     <h2>Enter your Details</h2>
     <table>
     <thead id="tableHead">
@@ -88,6 +91,9 @@ class EaseBookNow extends PolymerElement {
    }
    sessionStorage.setItem('travelDetail',JSON.stringify(this.travellerDetails));
    this.set('route.path','/review')
+  }
+  _handleBack(){
+    this.set('route.path','/home')
   }
 }
 

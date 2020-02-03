@@ -1,6 +1,9 @@
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-button/paper-button.js';
 import './shared-styles.js';
+import '@polymer/iron-icon/iron-icon.js'
+import '@polymer/app-route/app-location.js';
+
 /**
  * @customElement
  * @polymer
@@ -14,12 +17,17 @@ class EaseReview extends PolymerElement {
         }
         .details
         {
-          
             font-size:1.2em;
             font-family:sans-serif;
             margin:2px;
         }
+        button
+        {
+          cursor:pointer;
+        }
       </style>
+      <app-location route="{{route}}"></app-location>
+      <button on-click="_handleBack"><iron-icon icon="icons:arrow-back"></iron-icon></button>
       <div>
         <h3>Flight Details</h3>
         <ul class="details">
@@ -74,6 +82,9 @@ class EaseReview extends PolymerElement {
     this.travelDetail=JSON.parse(sessionStorage.getItem('travelDetail'));
     this.flightDetails=JSON.parse(sessionStorage.getItem('flightDetails'))
     this.totalPrice=parseFloat(this.travelDetail.length,10)*parseFloat(this.flightDetails.price,10)
+  }
+  _handleBack(){
+    this.set('route.path','/book')
   }
 }
 

@@ -34,7 +34,7 @@ class AjaxCall extends PolymerElement {
     }
     _handleResponse(event) {
         switch (this.action) {
-
+       
         }
     }
     openToast(message){
