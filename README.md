@@ -1,1 +1,1 @@
-# demo
+# First hackathon use case
