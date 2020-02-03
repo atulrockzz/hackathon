@@ -1,0 +1,7 @@
+{
+  "name": "ease-fly",
+  "short_name": "ease-fly",
+  "description": "Flights made easy",
+  "start_url": "/",
+  "display": "standalone"
+}
