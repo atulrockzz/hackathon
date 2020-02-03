@@ -4,6 +4,7 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-radio-button/paper-radio-button.js';
 import '@polymer/paper-radio-group/paper-radio-group.js';
 import '@polymer/paper-card/paper-card.js'
+import '@polymer/app-route/app-location.js';
 /**
  * @customElement
  * @polymer
@@ -26,6 +27,7 @@ class EaseBookNow extends PolymerElement {
           margin-top:26px;
         }
       </style>
+      <app-location route="{{route}}"></app-location>
     <h2>Enter your Details</h2>
     <table>
     <thead id="tableHead">
@@ -39,13 +41,13 @@ class EaseBookNow extends PolymerElement {
       <tbody>
         <template is="dom-repeat" items={{travellers}}>
         <tr>
-          <td><paper-input id="name" > </paper-input></td>
-          <td> <paper-input id="age" > </paper-input></td>
-          <td><paper-radio-group id="gender">
+          <td><paper-input class="name" > </paper-input></td>
+          <td> <paper-input class="age" > </paper-input></td>
+          <td><paper-radio-group class="gender">
             <paper-radio-button name="male">Male</paper-radio-button>
             <paper-radio-button name="female">female</paper-radio-button>
           </paper-radio-group></td>
-          <td> <paper-input id="email"> </paper-input></td>
+          <td> <paper-input class="email"> </paper-input></td>
       </tr>
     </template>
   </tbody>
@@ -57,7 +59,7 @@ class EaseBookNow extends PolymerElement {
     return {
      travellers:{
        type:Array,
-       value:[{name:'1',age:'2',gender:'3',email:'4'},{name:'1',age:'2',gender:'3',email:'4'},{name:'1',age:'2',gender:'3',email:'4'}]
+       value:[]
      },
      travellerDetails:{
       type:Array,
@@ -68,24 +70,24 @@ class EaseBookNow extends PolymerElement {
   /*getting the no. of travellers from session storage 
   *displaying no. of properties to get the data of travellers accordingly
   */ 
-  // connectedCallback(){
-  //   this.travellers.push(sessionStorage.getItem('travellers'));
-  // }
+  connectedCallback(){
+    super.connectedCallback();
+    this.travellers=JSON.parse(sessionStorage.getItem('travellerDetails'));
+  }
   /*getting the details of travellers on clicking Book Now button 
   *creating a object of all the travellers and pushing it to session storage
   */ 
   _handleClick(){
-    console.log(this.travellers)
+    let name=this.shadowRoot.querySelectorAll('.name');
+    let age=this.shadowRoot.querySelectorAll('.age');
+    let gender=this.shadowRoot.querySelectorAll('.gender');
+    let email=this.shadowRoot.querySelectorAll('.email');
      for(let i=0;i<this.travellers.length;i++){
-     const name=this.travellers[i].name;
-     const age=  this.travellers[i].age;
-     const gender=this.travellers[i].gender;
-     const email= this.travellers[i].email;
-     let obj={name,age,gender,email};
+     let obj={name:name[i].value,age:age[i].value,gender:gender[i].selected,email:email[i].value};
       this.travellerDetails.push(obj);
    }
-   sessionStorage.setItem('travellerDetails',JSON.stringify(this.travellerDetails));
-   console.log(this.travellerDetails)
+   sessionStorage.setItem('travelDetail',JSON.stringify(this.travellerDetails));
+   this.set('route.path','/review')
   }
 }
 

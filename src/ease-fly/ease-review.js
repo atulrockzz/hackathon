@@ -1,5 +1,5 @@
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
-
+import '@polymer/paper-button/paper-button.js';
 /**
  * @customElement
  * @polymer
@@ -14,11 +14,12 @@ class EaseReview extends PolymerElement {
       </style>
       <div>
         <h3>Flight Details</h3>
-        <span>{{flightDetails.flightName}}</span>
-        <span>{{flightDetails.startTime}}</span>
-        <span>{{flightDetails.endTime}}</span>
-        <span>{{flightDetails.price}}</span>
+        <span>FlightName : {{flightDetails.flightName}}</span>
+        <span>Departure Time : {{flightDetails.startTime}}</span>
+        <span>Arrival Time : {{flightDetails.endTime}}</span>
+        <span>Price : {{flightDetails.price}}</span>
       </div>
+      <h3>Travellers Details</h3>
       <table>
       <thead id="tableHead">
          <tr>
@@ -29,30 +30,40 @@ class EaseReview extends PolymerElement {
       </tr>
       </thead>
         <tbody>
-          <template is="dom-repeat" items={{travellers}}>
+          <template is="dom-repeat" items={{travelDetail}}>
           <tr>
-            <label for="name"></label>
-            <td><h3 id="name">{{item.name}}</h3></td>
-            <label for="age"></label>
-            <td> <h3 id="age">{{item.age}}</h3></td>
-            <label for="gender"></label>
-            <td><paper-radio-group id="gender" selected={{item.gender}}>
-              <paper-radio-button name="male">Male</paper-radio-button>
-              <paper-radio-button name="female">female</paper-radio-button>
-            </paper-radio-group></td>
-            <label for="email"></label>
-            <td> <h3 id="email">{{item.email}}</h3></td>
+            <td>{{item.name}}</td>
+            <td>{{item.age}}</td>
+            <td>{{item.gender}}</td>
+            <td>{{item.email}}</td>
         </tr>
       </template>
     </tbody>
   </table>
+  <label for="total">Total:</label><span>{{totalPrice}}</span>
       <paper-button raised on-click="_handleClick">BookNow</paper-button>
     `;
   }
   static get properties() {
     return {
-    
+    travelDetail:{
+      type:Array,
+      value:[]
+    },
+    flightDetails:{
+      type:Object,
+    },
+    totalPrice:{
+      type:Number,
+      value:0
+    }
     };
+  }
+  connectedCallback(){
+    super.connectedCallback();
+    this.travelDetail=JSON.parse(sessionStorage.getItem('travelDetail'));
+    this.flightDetails=JSON.parse(sessionStorage.getItem('flightDetails'))
+    this.totalPrice=parseFloat(this.travelDetail.length,10)*parseFloat(this.flightDetails.price,10)
   }
 }
 

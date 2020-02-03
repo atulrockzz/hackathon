@@ -5,6 +5,7 @@ import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-button/paper-button.js';
+import './shared-styles.js';
 /**
 * @customElement
 * @polymer
@@ -12,7 +13,7 @@ import '@polymer/paper-button/paper-button.js';
 class EaseFly extends PolymerElement {
 static get template() {
 return html`
-<style>
+<style include="shared-styles">
     :host {
         display: block;
         margin:0px;
@@ -25,6 +26,9 @@ return html`
         position:absolute;
         top:0%;
         width: 120px;
+        background:white;
+        height:auto;
+        padding-left:10px;
     }
     .wrapper {
         background: blueviolet;
@@ -93,7 +97,7 @@ return html`
 <table class="table">
     <thead>
         <tr>
-            <th>flightName</th>
+            <th>Flight Name</th>
             <th>Start Time</th>
             <th>End Time</th>
             <th>Price</th>
