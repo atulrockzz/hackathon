@@ -6,6 +6,7 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-button/paper-button.js';
 import './shared-styles.js';
+import '@polymer/app-route/app-location.js';
 /**
 * @customElement
 * @polymer
@@ -66,6 +67,7 @@ return html`
         justify-content: center;
     }
 </style>
+<app-location route="{{route}}"></app-location>
 <paper-radio-group selected="oneWay" id="tripType">
     <paper-radio-button name="oneWay">One Way</paper-radio-button>
     <paper-radio-button name="roundTrip">Round Trip</paper-radio-button>
@@ -170,6 +172,7 @@ this.data.startTime=event.model.item.startTime
 this.data.endTime=event.model.item.endTime
 this.data.price=event.model.item.price
 sessionStorage.setItem('flightDetails',JSON.stringify(this.data))
+this.set('route.path','/book')
 }
 }
 

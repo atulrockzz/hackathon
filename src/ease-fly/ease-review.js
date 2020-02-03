@@ -1,5 +1,6 @@
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-button/paper-button.js';
+import './shared-styles.js';
 /**
  * @customElement
  * @polymer
@@ -7,26 +8,35 @@ import '@polymer/paper-button/paper-button.js';
 class EaseReview extends PolymerElement {
   static get template() {
     return html`
-      <style>
+      <style include="shared-styles">
         :host {
           display: block;
+        }
+        .details
+        {
+          
+            font-size:1.2em;
+            font-family:sans-serif;
+            margin:2px;
         }
       </style>
       <div>
         <h3>Flight Details</h3>
-        <span>FlightName : {{flightDetails.flightName}}</span>
-        <span>Departure Time : {{flightDetails.startTime}}</span>
-        <span>Arrival Time : {{flightDetails.endTime}}</span>
-        <span>Price : {{flightDetails.price}}</span>
+        <ul class="details">
+        <li>Flight Name : {{flightDetails.flightName}}</li>
+        <li>Departure Time : {{flightDetails.startTime}}</li>
+        <li>Arrival Time : {{flightDetails.endTime}}</li>
+        <li>Price : {{flightDetails.price}}</li>
+        </ul>
       </div>
       <h3>Travellers Details</h3>
       <table>
       <thead id="tableHead">
          <tr>
-          <td>Name</td>
-          <td>Age</td>
-          <td>Gender</td>
-          <td>Email</td>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Gender</th>
+          <th>Email</th>
       </tr>
       </thead>
         <tbody>
@@ -41,7 +51,7 @@ class EaseReview extends PolymerElement {
     </tbody>
   </table>
   <label for="total">Total:</label><span>{{totalPrice}}</span>
-      <paper-button raised on-click="_handleClick">BookNow</paper-button>
+      <paper-button raised on-click="_handleClick">Proceed to pay</paper-button>
     `;
   }
   static get properties() {
