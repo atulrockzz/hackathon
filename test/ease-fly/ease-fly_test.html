@@ -1,56 +1,101 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>ease-fly test</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <script src="../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    <script src="../../node_modules/@polymer/test-fixture/test-fixture.js"></script>
-    <script src="../../node_modules/mocha/mocha.js"></script>
-    <script src="../../node_modules/chai/chai.js"></script>
-    <script src="../../node_modules/wct-mocha/wct-mocha.js"></script>
+  <title>ease-fly test</title>
 
-    <script type="module" src="../../src/ease-fly/ease-fly.js"></script>
-  </head>
-  <body>
+  <script src="../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+  <script src="../../node_modules/mocha/mocha.js"></script>
+  <script src="../../node_modules/chai/chai.js"></script>
+  <script src="../../node_modules/wct-mocha/wct-mocha.js"></script>
+  <script>
+  window.MyAppGlobals = { rootPath: '/' };
+</script>
+  <script type="module" src="../../src/ease-fly/ease-fly.js"></script>
+</head>
 
-    <test-fixture id="BasicTestFixture">
-      <template>
-        <ease-fly></ease-fly>
-      </template>
-    </test-fixture>
+<body>
 
-    <test-fixture id="ChangedPropertyTestFixture">
-      <template>
-        <ease-fly prop1="new-prop1"></ease-fly>
-      </template>
-    </test-fixture>
+  <test-fixture id="BasicTestFixture">
+    <template>
+      <ease-fly></ease-fly>
+    </template>
+  </test-fixture>
 
-    <script>
-      suite('ease-fly', function() {
+  <test-fixture id="ChangedPropertyTestFixture">
+    <template>
+      <ease-fly prop1="new-prop1"></ease-fly>
+    </template>
+  </test-fixture>
 
-        test('instantiating the element with default properties works', function() {
-          var element = fixture('BasicTestFixture');
-          assert.equal(element.prop1, 'ease-fly');
-          var elementShadowRoot = element.shadowRoot;
-          var elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello ease-fly!');
+  <script>
+    describe('Given User-List Component:', function () {
+      var element;
+      var elementShadowRoot;
+      describe('When the component is rendered', function () {
+        beforeEach(function () {
+          element = fixture('BasicTestFixture');
+          elementShadowRoot = element.shadowRoot;
         });
-
-        test('setting a property on the element works', function() {
-          // Create a test fixture
-          var element = fixture('ChangedPropertyTestFixture');
-          assert.equal(element.prop1, 'new-prop1');
-          var elementShadowRoot = element.shadowRoot;
-          var elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello new-prop1!');
+        it('should render app-location', () => {
+          let appLocation = element.$.location
+          expect(appLocation.route).to.equal(element.route)
         });
-
+        // it('should render app-route', () => {
+        //   let appRoute = elementShadowRoot.querySelector('app-route')
+        //   expect(appRoute.route).to.equal(element.route)
+        //   expect(appRoute.data).to.equal(element.routeData)
+        //   expect(appRoute.tail).to.equal(element.subRoute)
+        // })
+      //   it('should render iron-ajax', () => {
+      //     let ironAjax = elementShadowRoot.querySelector('iron-ajax')
+      //     expect(ironAjax).to.be.exist
+      //   })
+      //   describe('And when modalBtn button is triggered click event', () => {
+      //     let addBtn;
+      //     beforeEach(function () {
+      //       modalBtn = elementShadowRoot.querySelector('#modalBtn');
+      //       modalBtn.click();
+      //     });
+      //     it('should open modal dialog', sinon.test(() => {
+      //       let paperDialog = elementShadowRoot.querySelector('#modal')
+      //       expect(paperDialog.getAttribute('aria-hidden')).to.be.equal(null)
+      //     }))
+      //     it('should call _open() method once', function (done) {
+      //       flush(function () {
+      //         let modalButtonSpy = sinon.spy()
+      //         modalBtn.addEventListener('click', modalButtonSpy);
+      //         modalBtn.click();
+      //         expect(modalButtonSpy.callCount).to.be.equal(1)
+      //         done();
+      //       })
+      //     });
+      //   })
+      //   it('should instantiating the element with default properties works', () => {
+      //     expect(element.prop1).to.equal('unit-testing-app');
+      //     var elementHeader = elementShadowRoot.querySelector('h2');
+      //     expect(elementHeader.innerHTML).to.equal('Hello unit-testing-app!');
+      //   });
+      //   it('should render paper-input', () => {
+      //     let name = element.$.name;
+      //     expect(name.getAttribute('label')).to.equal('name')
+      //   });
       });
-    </script>
+      // test('setting a property on the element works', function() {
+      //   // Create a test fixture
+      //   var element = fixture('ChangedPropertyTestFixture');
+      //   assert.equal(element.prop1, 'new-prop1');
+      //   var elementShadowRoot = element.shadowRoot;
+      //   var elementHeader = elementShadowRoot.querySelector('h2');
+      //   assert.equal(elementHeader.innerHTML, 'Hello new-prop1!');
+    });
+  </script>
 
 
-  </body>
+</body>
+
 </html>

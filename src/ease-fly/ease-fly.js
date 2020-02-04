@@ -77,7 +77,7 @@ class EaseFly extends PolymerElement {
           display: none !important;
         }
       </style>
-      <app-location route="{{route}}"></app-location>
+      <app-location id="location" route="{{route}}"></app-location>
     <app-route route="{{route}}" data="{{routeData}}" pattern="[[rootPath]]:page" tail="{{subRoute}}"></app-route>
     <app-drawer-layout force-narrow>
       <app-drawer id="drawer" slot="drawer">
