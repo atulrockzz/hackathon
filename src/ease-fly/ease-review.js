@@ -83,8 +83,14 @@ class EaseReview extends PolymerElement {
     this.flightDetails=JSON.parse(sessionStorage.getItem('flightDetails'))
     this.totalPrice=parseFloat(this.travelDetail.length,10)*parseFloat(this.flightDetails.price,10)
   }
+  //_handleBack() is fired when back button is clicked
   _handleBack(){
     this.set('route.path','/book')
+  }
+  //_handleClick() is fired when proceed to pay button is clicked
+  _handleClick()
+  {
+    this.set('route.path','/payments')
   }
 }
 

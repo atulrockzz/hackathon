@@ -28,6 +28,10 @@ class EaseBookNow extends PolymerElement {
         #gender{
           margin-top:26px;
         }
+        button
+        {
+            cursor:pointer;
+        }
       </style>
       <app-location route="{{route}}"></app-location>
       <button on-click="_handleBack"><iron-icon icon="icons:arrow-back"></iron-icon></button>

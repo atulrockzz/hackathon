@@ -1,4 +1,4 @@
-import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
+import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-radio-button/paper-radio-button.js';
 import '@polymer/paper-radio-group/paper-radio-group.js';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
@@ -7,13 +7,15 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-button/paper-button.js';
 import './shared-styles.js';
 import '@polymer/app-route/app-location.js';
+import './ajax-call.js';
+import '@polymer/paper-checkbox/paper-checkbox.js'
 /**
 * @customElement
 * @polymer
 */
 class EaseFly extends PolymerElement {
-static get template() {
-return html`
+    static get template() {
+        return html`
 <style include="shared-styles">
     :host {
         display: block;
@@ -22,9 +24,8 @@ return html`
         box-sizing: border-box;
         font-size: 1.2em;
     }
-    paper-dropdown-menu
+    #noOfTraveller
     {
-        position:absolute;
         top:0%;
         width: 120px;
         background:white;
@@ -33,14 +34,15 @@ return html`
     }
     .wrapper {
         background: blueviolet;
-        height: 100px;
+        width:100%;
+        height: auto;
     }
 
     ul {
         display: inline-flex;
         list-style: none;
         align-items: flex-start;
-        position: relative;
+        
     }
     ul li 
     {
@@ -66,7 +68,13 @@ return html`
         display: flex;
         justify-content: center;
     }
+    #sortBy
+    {
+        margin-left:10px;
+        width: 120px;
+    }
 </style>
+<ajax-call id="ajax"></ajax-call>
 <app-location route="{{route}}"></app-location>
 <paper-radio-group selected="oneWay" id="tripType">
     <paper-radio-button name="oneWay">One Way</paper-radio-button>
@@ -75,6 +83,7 @@ return html`
 <div class="wrapper">
     <ul>
         <li><input id="from" type="text" placeholder="From"/></li>
+        <li><iron-icon icon=icons:compare-arrows></iron-icon></li>
         <li><input id="destination" type="text" placeholder="To" /></li>
         <li><input id="goingDate" type="date" /></li>
         <li><input id="returnDate" type="date" /></li>
@@ -96,6 +105,14 @@ return html`
 <div id="search">
 <paper-button on-click="_handleSearch" raised>Search</paper-button>
 </div>
+<paper-checkbox on-click="_handleFilter" id="indigo">Indigo</paper-checkbox>
+<paper-checkbox on-click="_handleFilter" id="spiceJet">Spicejet</paper-checkbox>
+<paper-dropdown-menu id="sortBy" name="sortBy" vertical-offset="60" on-value-changed="_valueChanged">
+                <paper-listbox slot="dropdown-content" class="dropdown-content" selected=0>
+                    <paper-item>Asc</paper-item>
+                    <paper-item>Dsc</paper-item>
+                </paper-listbox>
+            </paper-dropdown-menu>
 <table class="table">
     <thead>
         <tr>
@@ -117,63 +134,97 @@ return html`
                 </template>
         </table>
 `;
-}
-static get properties() {
-return {
-prop1: {
-type: String,
-value: 'ease-home'
-},
-flightsList:{
-    type:Array,
-    value:[{flightName:"abc",startTime:"856",endTime:"sdfsd",price:"400"},{flightName:"abc",startTime:"856",endTime:"sdfsd",price:"400"}]
-},
-data:{
-    type:Object,
-    value:{}
-}
-};
-}
-//_handleSearch will be invoked when user clicks on search button
-_handleSearch()
-{
-sessionStorage.clear();
-const finalDate=this.getDate()
-console.log(finalDate)
-const from=this.$.from.value;
-const destination=this.$.destination.value;
-const noOfTraveller=this.$.noOfTraveller.value;
-console.log(noOfTraveller,destination,from)
-let travellerDetails=[]
-this.data={from,destination,finalDate}
-for(let i=0;i<noOfTraveller;i++)
-{
-    let obj={name:"",gender:"",email:"",age:""};
-    travellerDetails.push(obj);
-    console.log(obj)
-}
-console.log(travellerDetails)
-sessionStorage.setItem('travellerDetails',JSON.stringify(travellerDetails));
-}
-//return the date in required format
-getDate()
-{
-    const goingDate=this.$.goingDate.value
-    const goDate=new Date(goingDate);
-    const goYear=goDate.getFullYear();
-    const goMonth=goDate.getMonth();
-    const goDay=goDate.getDate();
-    return `${goYear}-${goMonth}-${goDay}`;
-}
-_handleBook(event)
-{
-this.data.flightName=event.model.item.flightName
-this.data.startTime=event.model.item.startTime
-this.data.endTime=event.model.item.endTime
-this.data.price=event.model.item.price
-sessionStorage.setItem('flightDetails',JSON.stringify(this.data))
-this.set('route.path','/book')
-}
+    }
+    ready()
+    {
+        super.ready();
+        this.addEventListener('search-flights',(e)=>this._searchFlights(e))
+        this.addEventListener('filter-flights',(e)=>this._filterFlights(e))
+    }
+    static get properties() {
+        return {
+            flightsList: {
+                type: Array,
+                value: [{ flightName: "abc", startTime: "856", endTime: "sdfsd", price: "400" }, { flightName: "abc", startTime: "856", endTime: "sdfsd", price: "400" }]
+            },
+            data: {
+                type: Object,
+                value: {}
+            },
+            finalDate:String,
+            from:String,
+            destination:String,
+            noOfTraveller:Number,
+        };
+    }
+    //_handleFilter is used to filter the list of flights on the basis of flight name
+    _handleFilter(event)
+    {   let j=0,flightName=[];
+        let filter=this.shadowRoot.querySelectorAll('paper-checkbox')
+        for(let i=0;i<filter.length;i++)
+        {
+            if(filter[i].checked)
+            {
+                console.log(filter[i].innerText)
+                flightName[j]=filter[i].innerText;
+                j++;
+               
+            }
+            const postObj={
+                sourceName:this.from,
+                destinationName:this.destination,
+                date:this.finalDate,
+                noOfTraveller:this.noOfTraveller
+                }
+            this.$.ajax._makeAjaxCall('post',`http://10.117.189.208:8085/easefly/flights?flightName=${flightName[0]}&sortBy=Asc`,postObj,'filter')
+        }
+    }
+    //_handleSearch is invoked when user clicks on search button
+    _handleSearch() {
+        sessionStorage.clear();
+        this.finalDate = this.getDate()
+        this.from = this.$.from.value;
+        this.destination = this.$.destination.value;
+        this.noOfTraveller = parseInt(this.$.noOfTraveller.value,10);
+        let travellerDetails = []
+        this.data = { from:this.from, destination:this.destination, finalDate:this.finalDate }
+        for (let i = 0; i < noOfTraveller; i++) {
+            let obj = { name: "", gender: "", email: "", age: "" };
+            travellerDetails.push(obj);
+        }
+        sessionStorage.setItem('travellerDetails', JSON.stringify(travellerDetails));
+        this.$.ajax._makeAjaxCall("get", `easefly/flights?source=${from}&destination=${destination}
+&date=${finalDate}&noOfTraveller=${noOfTraveller}`, null, 'search')
+    }
+    //getDate() returns the date in required format
+    getDate() {
+        const goingDate = this.$.goingDate.value
+        const goDate = new Date(goingDate);
+        const goYear = goDate.getFullYear();
+        const goMonth = goDate.getMonth();
+        const goDay = goDate.getDate();
+        return `${goYear}-${goMonth}-${goDay}`;
+    }
+    //_handleBook is 
+    _handleBook(event) {
+        this.data.flightName = event.model.item.flightName
+        this.data.startTime = event.model.item.startTime
+        this.data.endTime = event.model.item.endTime
+        this.data.price = event.model.item.price
+        sessionStorage.setItem('flightDetails', JSON.stringify(this.data))
+        this.set('route.path', '/book')
+    }
+    //_searchFlights populates the list of available flights
+    _searchFlights(event)
+    {
+        this.flightsList=event.detail.data;
+    }
+    //_filterFlights filters the list of available flights
+    _filterFlights(event)
+    {
+        this.flightsList=event.detail.data.flightList;
+        console.log(this.flightsList)
+    }
 }
 
 window.customElements.define('ease-home', EaseFly);

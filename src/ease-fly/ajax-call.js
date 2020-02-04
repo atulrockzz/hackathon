@@ -1,7 +1,5 @@
 import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-ajax/iron-ajax.js'
-import '@polymer/app-route/app-location.js';
-import '@polymer/paper-toast/paper-toast.js';
 /**
  * @customElement
  * @polymer
@@ -14,9 +12,7 @@ class AjaxCall extends PolymerElement {
           display: block;
         }
       </style>
-      <app-location route="{{route}}" ></app-location>
     <iron-ajax id="ajax" on-response="_handleResponse" handle-as="json" content-type="application/json"> </iron-ajax>
-    <paper-toast id="toast" text={{message}} ></paper-toast>
     `;
     }
     static get properties() {
@@ -24,7 +20,7 @@ class AjaxCall extends PolymerElement {
            
         };
     }
-    ajaxCall(method, url, obj, action) {
+    _makeAjaxCall(method, url, obj, action) {
         const ajax = this.$.ajax
         this.action = action
         ajax.body = obj ? JSON.stringify(obj) : undefined;
@@ -33,13 +29,15 @@ class AjaxCall extends PolymerElement {
         ajax.generateRequest();
     }
     _handleResponse(event) {
+      const data=event.detail.response
         switch (this.action) {
+          case 'search': this.dispatchEvent(new CustomEvent('search-flights',{bubbles:true,composed:true,detail:{data}}))
+            break;
+          case 'filter': this.dispatchEvent(new CustomEvent('filter-flights',{bubbles:true,composed:true,detail:{data}}))
+            break;
+          default:
        
         }
-    }
-    openToast(message){
-        this.message=message;
-        this.$.toast.open();
-    }   
+    } 
 }
 window.customElements.define('ajax-call', AjaxCall);

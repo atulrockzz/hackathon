@@ -71,7 +71,7 @@ class EaseFly extends PolymerElement {
         }
         
         .active {
-          background-color: #4CAF50;
+          background-color: blueviolet;
         }
         [hidden] {
           display: none !important;
@@ -124,6 +124,7 @@ class EaseFly extends PolymerElement {
   }
   ready() {
     super.ready();
+    //adding active class to the clicked tab on nav-bar
     afterNextRender(this, () => {
       let navs = this.shadowRoot.querySelectorAll('ul li')
       for (let i = 0; i < navs.length; i++) {
