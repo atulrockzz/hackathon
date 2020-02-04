@@ -107,8 +107,8 @@ class EaseFly extends PolymerElement {
 </div>
 <paper-checkbox on-click="_handleFilter" id="indigo">Indigo</paper-checkbox>
 <paper-checkbox on-click="_handleFilter" id="spiceJet">Spicejet</paper-checkbox>
-<paper-dropdown-menu id="sortBy" name="sortBy" vertical-offset="60" on-value-changed="_valueChanged">
-                <paper-listbox slot="dropdown-content" class="dropdown-content" selected=0>
+<paper-dropdown-menu id="sortBy" name="sortBy" vertical-offset="60" on-change="_filterFlights">
+                <paper-listbox slot="dropdown-content" id="sortBy" class="dropdown-content" selected=0>
                     <paper-item>Asc</paper-item>
                     <paper-item>Dsc</paper-item>
                 </paper-listbox>
@@ -135,11 +135,11 @@ class EaseFly extends PolymerElement {
         </table>
 `;
     }
-    ready()
-    {
+    ready() {
+        //listening custom events sent as a response by makeAjaxCall 
         super.ready();
-        this.addEventListener('search-flights',(e)=>this._searchFlights(e))
-        this.addEventListener('filter-flights',(e)=>this._filterFlights(e))
+        this.addEventListener('search-flights', (e) => this._searchFlights(e))
+        this.addEventListener('filter-flights', (e) => this._filterFlights(e))
     }
     static get properties() {
         return {
@@ -151,32 +151,32 @@ class EaseFly extends PolymerElement {
                 type: Object,
                 value: {}
             },
-            finalDate:String,
-            from:String,
-            destination:String,
-            noOfTraveller:Number,
+            finalDate: String,
+            from: String,
+            destination: String,
+            noOfTraveller: Number,
         };
     }
     //_handleFilter is used to filter the list of flights on the basis of flight name
-    _handleFilter(event)
-    {   let j=0,flightName=[];
-        let filter=this.shadowRoot.querySelectorAll('paper-checkbox')
-        for(let i=0;i<filter.length;i++)
-        {
-            if(filter[i].checked)
-            {
+    _handleFilter(event) {
+        let j = 0, flightName = [];
+        let filter = this.shadowRoot.querySelectorAll('paper-checkbox')
+        for (let i = 0; i < filter.length; i++) {
+            if (filter[i].checked) {
                 console.log(filter[i].innerText)
-                flightName[j]=filter[i].innerText;
+                flightName[j] = filter[i].innerText;
                 j++;
-               
+
             }
-            const postObj={
-                sourceName:this.from,
-                destinationName:this.destination,
-                date:this.finalDate,
-                noOfTraveller:this.noOfTraveller
-                }
-            this.$.ajax._makeAjaxCall('post',`http://10.117.189.208:8085/easefly/flights?flightName=${flightName[0]}&sortBy=Asc`,postObj,'filter')
+            //creating object
+            const postObj = {
+                sourceName: this.from,
+                destinationName: this.destination,
+                date: this.finalDate,
+                noOfTraveller: this.noOfTraveller
+            }
+            let sortBy=this.$.sortBy.value;
+            this.$.ajax._makeAjaxCall('post', `http://10.117.189.208:8085/easefly/flights?flightName=${flightName[0]}&sortBy=${sortBy}`, postObj, 'filter')
         }
     }
     //_handleSearch is invoked when user clicks on search button
@@ -185,25 +185,30 @@ class EaseFly extends PolymerElement {
         this.finalDate = this.getDate()
         this.from = this.$.from.value;
         this.destination = this.$.destination.value;
-        this.noOfTraveller = parseInt(this.$.noOfTraveller.value,10);
+        this.noOfTraveller = parseInt(this.$.noOfTraveller.value, 10);
         let travellerDetails = []
-        this.data = { from:this.from, destination:this.destination, finalDate:this.finalDate }
-        for (let i = 0; i < noOfTraveller; i++) {
+        this.data = { from: this.from, destination: this.destination, finalDate: this.finalDate }
+        for (let i = 0; i < this.noOfTraveller; i++) {
             let obj = { name: "", gender: "", email: "", age: "" };
             travellerDetails.push(obj);
         }
         sessionStorage.setItem('travellerDetails', JSON.stringify(travellerDetails));
-        this.$.ajax._makeAjaxCall("get", `easefly/flights?source=${from}&destination=${destination}
-&date=${finalDate}&noOfTraveller=${noOfTraveller}`, null, 'search')
+        this.$.ajax._makeAjaxCall("get", `http://10.117.189.208:8085/easefly/flights?date=${this.finalDate}&destinationName=${this.destination}&noOfTraveller=${this.noOfTraveller}&sourceName=${this.from}
+`, null, 'search')
     }
     //getDate() returns the date in required format
     getDate() {
         const goingDate = this.$.goingDate.value
-        const goDate = new Date(goingDate);
+        let goDate = new Date(goingDate);
         const goYear = goDate.getFullYear();
-        const goMonth = goDate.getMonth();
+        const goMonth = goDate.getMonth() + 1;
         const goDay = goDate.getDate();
-        return `${goYear}-${goMonth}-${goDay}`;
+        let formattedMonth=this.formatMonth(goMonth)
+        let formattedDay=this.formatDay(goDay)
+        this.formatDay(goDay)
+        let dateString =`${goYear}-${formattedMonth}-${formattedDay}`;
+        console.log(`${goYear}-${formattedMonth}-${formattedDay}`)
+        return `${dateString}`;
     }
     //_handleBook is 
     _handleBook(event) {
@@ -211,19 +216,42 @@ class EaseFly extends PolymerElement {
         this.data.startTime = event.model.item.startTime
         this.data.endTime = event.model.item.endTime
         this.data.price = event.model.item.price
+        this.data.flightId= event.model.item.flightId
+        console.log(this.data.flightId)
+        console.log(event.model.item.flightId)
         sessionStorage.setItem('flightDetails', JSON.stringify(this.data))
         this.set('route.path', '/book')
     }
     //_searchFlights populates the list of available flights
-    _searchFlights(event)
-    {
-        this.flightsList=event.detail.data;
+    _searchFlights(event) {
+        this.flightsList = event.detail.data;
     }
     //_filterFlights filters the list of available flights
-    _filterFlights(event)
-    {
-        this.flightsList=event.detail.data.flightList;
+    _filterFlights(event) {
+        this.flightsList = event.detail.data.flightList;
         console.log(this.flightsList)
+    }
+    formatMonth(month)
+    {
+        console.log(month.toString().length)
+        if(month.toString().length==1)
+        {
+            return `0${month}`
+        }
+        else{
+            return `${month}`
+        }
+    }
+    formatDay(day)
+    {
+        if(day.toString().length==1)
+        {
+            return `0${day}`
+        }
+        else
+        {
+            return `${day}`
+        }
     }
 }
 

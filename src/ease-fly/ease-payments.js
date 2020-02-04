@@ -5,6 +5,8 @@ import './shared-component/smart-accordion.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-icons/iron-icons.js';
+import './ajax-call.js';
+
 /**
 * @customElement
 * @polymer
@@ -84,19 +86,10 @@ return html`
     padding-left: 20px;
     border: 2px solid #e1e8ee;
     border-radius: 6px;
-    background: url('caret.png') no-repeat;
     background-position: 85% 50%;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-}
- 
-.month select {
-    float: left;
-}
- 
-.year select {
     float: right;
-}
+    float: left;
+  }
 .cvv-input input {
     float: left;
     width: 145px;
@@ -127,11 +120,9 @@ return html`
 }
 .proceed-btn a {
     text-decoration: none;
-}
- 
-.proceed-btn a {
     color: #fff;
 }
+ 
 paper-input
 {
   width:300px;
@@ -142,6 +133,7 @@ position:absolute;
 right:5%;
 }
 </style>
+<ajax-call id="ajax"></ajax-call>
 <smart-accordion>
   <div slot="summary">Credit Card/Debit Card</div>
   <ul>
@@ -199,32 +191,55 @@ right:5%;
         </div>
 
         <!-- Buttons -->
-        <button type="submit" class="proceed-btn">Proceed</button>
+        <button type="submit"  on-click="_handleSubmit" class="proceed-btn">Proceed</button>
       </div>
     </form>
   </ul>
 </smart-accordion>
 <smart-accordion>
   <div slot="summary">UPI ID</div>
-  
   <paper-input label="Enter your upi"><div slot="suffix">@upi</div></paper-input>
-  <button type="submit" class="upi-btn">Proceed</button>
+  <button type="submit"  on-click="_handleSubmit" class="upi-btn">Proceed</button>
 </smart-accordion>
 <smart-accordion>
   <div slot="summary">Wallets</div>
-  <paper-radio-group selected="oneWay" id="tripType">
-    <paper-radio-button name="phonePe">PhonePe</paper-radio-button>
-    <paper-radio-button name="paytm">Paytm</paper-radio-button>
-    <paper-radio-button name="mobikwik">Mobikwik</paper-radio-button>
+  <paper-radio-group selected="phonePe" id="payment">
+    <paper-radio-button name="PhonePe">PhonePe</paper-radio-button>
+    <paper-radio-button name="PayTM">PayTM</paper-radio-button>
+    <paper-radio-button name="GooglePay">GooglePay</paper-radio-button>
 </paper-radio-group>
-<button type="submit" class="wallet-btn">Proceed</button>
+<button type="submit" on-click="_handleSubmit" class="wallet-btn">Proceed</button>
 </smart-accordion>
 `;
 }
 static get properties() {
 return {
-
+  postObj:{
+    type:Object,
+    value:{}
+  }
 };
+}
+ready() {
+  //listening custom events sent as a response by makeAjaxCall 
+  super.ready();
+  this.addEventListener('booking-confirmed', (e) => this._bookingConfirmed(e))
+  this.addEventListener('filter-flights', (e) => this._filterFlights(e))
+}
+//submitting the details of the booking with traveller details, flight details, and payment details after final payments
+_handleSubmit(){
+  let travellerDetails=JSON.parse(sessionStorage.getItem('travelDetail'))
+  let {flightId,finalDate}=JSON.parse(sessionStorage.getItem('flightDetails'))
+  this.postObj.travelDate=finalDate
+  this.postObj.paymentType=this.$.payment.selected;
+  this.postObj.travellerList=travellerDetails;
+  console.log(this.postObj)
+  this.$.ajax._makeAjaxCall('post',`http://10.117.189.208:8085/easefly/flights/${flightId}/bookings`,this.postObj,'booking-confirmed')
+}
+_bookingConfirmed(event)
+{
+let bookingId=event.detail.data.bookingId
+  alert(`Booking successful with booking ID ${bookingId}`)
 }
 }
 

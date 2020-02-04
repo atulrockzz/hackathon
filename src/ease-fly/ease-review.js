@@ -50,10 +50,10 @@ class EaseReview extends PolymerElement {
         <tbody>
           <template is="dom-repeat" items={{travelDetail}}>
           <tr>
-            <td>{{item.name}}</td>
+            <td>{{item.travellerName}}</td>
             <td>{{item.age}}</td>
             <td>{{item.gender}}</td>
-            <td>{{item.email}}</td>
+            <td>{{item.emailId}}</td>
         </tr>
       </template>
     </tbody>

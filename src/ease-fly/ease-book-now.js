@@ -85,12 +85,21 @@ class EaseBookNow extends PolymerElement {
   *creating a object of all the travellers and pushing it to session storage
   */ 
   _handleClick(){
+    // sessionStorage.clear('travelDetail');
     let name=this.shadowRoot.querySelectorAll('.name');
     let age=this.shadowRoot.querySelectorAll('.age');
     let gender=this.shadowRoot.querySelectorAll('.gender');
     let email=this.shadowRoot.querySelectorAll('.email');
+    let primaryTravellerFlag;
      for(let i=0;i<this.travellers.length;i++){
-     let obj={name:name[i].value,age:age[i].value,gender:gender[i].selected,email:email[i].value};
+       if(i==0)
+       {
+        primaryTravellerFlag=true
+       }
+       else{
+        primaryTravellerFlag=false
+       }
+     let obj={travellerName:name[i].value,gender:gender[i].selected,age:parseInt(age[i].value),emailId:email[i].value,primaryTravellerFlag};
       this.travellerDetails.push(obj);
    }
    sessionStorage.setItem('travelDetail',JSON.stringify(this.travellerDetails));
