@@ -1,4 +1,4 @@
-import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
+import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
 import './ajax-call.js';
 import './shared-styles.js';
 import '@polymer/paper-button/paper-button.js';
@@ -53,39 +53,47 @@ class EaseBookingsConfirmed extends PolymerElement {
   }
   static get properties() {
     return {
-    travelDetail:{
-      type:Array,
-      value:[]
-    },
-    flightDetails:{
-      type:Object,
-      value:{}
-    },
-    totalPrice:{
-      type:Number,
-      value:0
-    }
+      travelDetail: {
+        type: Array,
+        value: []
+      },
+      flightDetails: {
+        type: Object,
+        value: {}
+      },
+      totalPrice: {
+        type: Number,
+        value: 0
+      }
     };
   }
   ready() {
     //listening custom events sent as a response by makeAjaxCall 
     super.ready();
     this.addEventListener('myBookings', (e) => this._myBookings(e))
-}
-  connectedCallback()
-  {
+  }
+  connectedCallback() {
     super.connectedCallback();
-    this.$.ajax._makeAjaxCall("get", `http://10.117.189.208:8085/easefly/flights/bookings/${sessionStorage.getItem('myBookingId')}`,null,'myBookings')
+    this.$.ajax._makeAjaxCall("get", `http://10.117.189.208:8085/easefly/flights/bookings/${sessionStorage.getItem('myBookingId')}`, null, 'myBookings')
   }
-  _myBookings(event){
-    this.flightDetails=event.detail.data
+  /**
+   * 
+   * @param {*} event 
+   */
+  _myBookings(event) {
+    this.flightDetails = event.detail.data
   }
-  _handleCancel(event){
-    this.$.ajax._makeAjaxCall("post", `http://10.117.189.208:8085/easefly/bookingCancel?bookingId=${sessionStorage.getItem('myBookingId')}`,null,'')
+
+  /**
+   * 
+   * @param {*} event 
+   */
+  _handleCancel(event) {
+    this.$.ajax._makeAjaxCall("post", `http://10.117.189.208:8085/easefly/bookingCancel?bookingId=${sessionStorage.getItem('myBookingId')}`, null, '')
     // alert('your Booking has been cancelled');
   }
-  _handleBack(){
-    this.set('route.path','/home')
+  _handleBack() {
+    this.set('route.path', '/home')
   }
 }
 

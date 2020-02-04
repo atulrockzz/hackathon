@@ -14,6 +14,7 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/iron-icon/iron-icon';
+import {setPassiveTouchGestures} from '@polymer/polymer/lib/utils/settings.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/iron-icons/iron-icons.js';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
@@ -122,6 +123,11 @@ class EaseFly extends PolymerElement {
     <iron-media-query query="min-width: 600px" query-matches="{{wideLayout}}"></iron-media-query>
     `;
   }
+  constructor()
+  {
+    super();
+    setPassiveTouchGestures(true);
+  }
   ready() {
     super.ready();
     //adding active class to the clicked tab on nav-bar
@@ -151,14 +157,14 @@ class EaseFly extends PolymerElement {
       items: {
         type: Array,
         value: function () {
-          return [{ label: 'Home', route: 'home'}]
+          return [{ label: 'Home', route: 'home'},{ label: 'login', route: 'login'},{ label: 'payment', route: 'payment'}]
         }
       }
     };
 
   }
   /**
-  *_pageChanged is a simple observer which is triggered when page property is changed
+  *simple observer which is triggered when page property is changed
   *@param {String} newPage value of changed page 
   **/
   _pageChanged(newPage) {
@@ -191,6 +197,7 @@ class EaseFly extends PolymerElement {
     return ['_routerChanged(routeData.page)']
   }
   /**
+   * @author: Abhinav
    *@param {String} page Value of new page
   **/
   _routerChanged(page) {

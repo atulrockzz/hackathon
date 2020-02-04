@@ -21,11 +21,20 @@ class AjaxCall extends PolymerElement {
     };
   }
   /**
+   * @description: ???
+   * @author: ???
   *@param {String} url url of specific location
   *@param {String} method method type:get/put/post/delete
   *@param {Object{}|Null} postObj needs object as value for put/post and null for get/delete
   *@param {Boolean} sync true for synchronization and false for asynchronization
   **/
+ /**
+  * 
+  * @param {*} method 
+  * @param {*} url 
+  * @param {*} obj 
+  * @param {*} action 
+  */
   _makeAjaxCall(method, url, obj, action) {
     const ajax = this.$.ajax
     this.action = action
@@ -34,9 +43,11 @@ class AjaxCall extends PolymerElement {
     ajax.url = url;
     ajax.generateRequest();
   }
-  /**
-* Fired everytime when ajax call is made.It handles response of the ajax 
-* */
+
+/**
+ * @description: Fired everytime when ajax call is made.It handles response of the ajax 
+ * @param {*} event 
+ */
   _handleResponse(event) {
     const data = event.detail.response
     console.log(event.detail.response)

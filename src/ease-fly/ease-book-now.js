@@ -1,4 +1,4 @@
-import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
+import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-radio-button/paper-radio-button.js';
@@ -64,49 +64,52 @@ class EaseBookNow extends PolymerElement {
   }
   static get properties() {
     return {
-     travellers:{
-       type:Array,
-       value:[]
-     },
-     travellerDetails:{
-      type:Array,
-      value:[]
-    }
+      travellers: {
+        type: Array,
+        value: []
+      },
+      travellerDetails: {
+        type: Array,
+        value: []
+      }
     };
   }
-  /*getting the no. of travellers from session storage 
-  *displaying no. of properties to get the data of travellers accordingly
-  */ 
-  connectedCallback(){
+
+  connectedCallback() {
     super.connectedCallback();
-    this.travellers=JSON.parse(sessionStorage.getItem('travellerDetails'));
+    /*getting the no. of travellers from session storage 
+ *displaying no. of properties to get the data of travellers accordingly
+ */
+/**
+ * ???
+ */
+    this.travellers = JSON.parse(sessionStorage.getItem('travellerDetails'));
   }
   /*getting the details of travellers on clicking Book Now button 
   *creating a object of all the travellers and pushing it to session storage
-  */ 
-  _handleClick(){
+  */
+  _handleClick() {
     sessionStorage.removeItem('travelDetail');
-    let name=this.shadowRoot.querySelectorAll('.name');
-    let age=this.shadowRoot.querySelectorAll('.age');
-    let gender=this.shadowRoot.querySelectorAll('.gender');
-    let email=this.shadowRoot.querySelectorAll('.email');
+    let name = this.shadowRoot.querySelectorAll('.name');
+    let age = this.shadowRoot.querySelectorAll('.age');
+    let gender = this.shadowRoot.querySelectorAll('.gender');
+    let email = this.shadowRoot.querySelectorAll('.email');
     let primaryTravellerFlag;
-     for(let i=0;i<this.travellers.length;i++){
-       if(i==0)
-       {
-        primaryTravellerFlag=true
-       }
-       else{
-        primaryTravellerFlag=false
-       }
-     let obj={travellerName:name[i].value,gender:gender[i].selected,age:parseInt(age[i].value),emailId:email[i].value,primaryTravellerFlag};
+    for (let i = 0; i < this.travellers.length; i++) {
+      if (i == 0) {
+        primaryTravellerFlag = true
+      }
+      else {
+        primaryTravellerFlag = false
+      }
+      let obj = { travellerName: name[i].value, gender: gender[i].selected, age: parseInt(age[i].value), emailId: email[i].value, primaryTravellerFlag };
       this.travellerDetails.push(obj);
-   }
-   sessionStorage.setItem('travelDetail',JSON.stringify(this.travellerDetails));
-   this.set('route.path','/review')
+    }
+    sessionStorage.setItem('travelDetail', JSON.stringify(this.travellerDetails));
+    this.set('route.path', '/review')
   }
-  _handleBack(){
-    this.set('route.path','/home')
+  _handleBack() {
+    this.set('route.path', '/home')
   }
 }
 

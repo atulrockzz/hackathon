@@ -12,8 +12,8 @@ import './ajax-call.js';
 * @polymer
 */
 class EasePayments extends PolymerElement {
-static get template() {
-return html`
+  static get template() {
+    return html`
 <style>
   :host {
     display: block;
@@ -211,36 +211,35 @@ right:5%;
 <button type="submit" on-click="_handleSubmit" class="wallet-btn">Proceed</button>
 </smart-accordion>
 `;
-}
-static get properties() {
-return {
-  postObj:{
-    type:Object,
-    value:{}
   }
-};
-}
-ready() {
-  //listening custom events sent as a response by makeAjaxCall 
-  super.ready();
-  this.addEventListener('booking-confirmed', (e) => this._bookingConfirmed(e))
-  this.addEventListener('filter-flights', (e) => this._filterFlights(e))
-}
-//submitting the details of the booking with traveller details, flight details, and payment details after final payments
-_handleSubmit(){
-  let travellerDetails=JSON.parse(sessionStorage.getItem('travelDetail'))
-  let {flightId,finalDate}=JSON.parse(sessionStorage.getItem('flightDetails'))
-  this.postObj.travelDate=finalDate
-  this.postObj.paymentType=this.$.payment.selected;
-  this.postObj.travellerList=travellerDetails;
-  console.log(this.postObj)
-  this.$.ajax._makeAjaxCall('post',`http://10.117.189.208:8085/easefly/flights/${flightId}/bookings`,this.postObj,'booking-confirmed')
-}
-_bookingConfirmed(event)
-{
-let bookingId=event.detail.data.bookingId
-  alert(`Booking successful with booking ID ${bookingId}`)
-}
+  static get properties() {
+    return {
+      postObj: {
+        type: Object,
+        value: {}
+      }
+    };
+  }
+  ready() {
+    //listening custom events sent as a response by makeAjaxCall 
+    super.ready();
+    this.addEventListener('booking-confirmed', (e) => this._bookingConfirmed(e))
+    this.addEventListener('filter-flights', (e) => this._filterFlights(e))
+  }
+  //submitting the details of the booking with traveller details, flight details, and payment details after final payments
+  _handleSubmit() {
+    let travellerDetails = JSON.parse(sessionStorage.getItem('travelDetail'))
+    let { flightId, finalDate } = JSON.parse(sessionStorage.getItem('flightDetails')); // object deconstruct/destr
+    this.postObj.travelDate = finalDate;
+    this.postObj.paymentType = this.$.payment.selected;
+    this.postObj.travellerList = travellerDetails;
+    console.log(this.postObj)
+    this.$.ajax._makeAjaxCall('post', `http://10.117.189.208:8085/easefly/flights/${flightId}/bookings`, this.postObj, 'booking-confirmed')
+  }
+  _bookingConfirmed(event) {
+    let { bookingId } = event.detail.data;
+    alert(`Booking successful with booking ID ${bookingId}`)
+  }
 }
 
 window.customElements.define('ease-payments', EasePayments);

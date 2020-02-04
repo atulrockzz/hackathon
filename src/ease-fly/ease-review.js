@@ -1,4 +1,4 @@
-import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
+import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-button/paper-button.js';
 import './shared-styles.js';
 import '@polymer/iron-icon/iron-icon.js'
@@ -48,7 +48,7 @@ class EaseReview extends PolymerElement {
       </tr>
       </thead>
         <tbody>
-          <template is="dom-repeat" items={{travelDetail}}>
+          <template is="dom-repeat" items="{{travelDetail}}" >
           <tr>
             <td>{{item.travellerName}}</td>
             <td>{{item.age}}</td>
@@ -64,33 +64,35 @@ class EaseReview extends PolymerElement {
   }
   static get properties() {
     return {
-    travelDetail:{
-      type:Array,
-      value:[]
-    },
-    flightDetails:{
-      type:Object,
-    },
-    totalPrice:{
-      type:Number,
-      value:0
-    }
+      travelDetail: {
+        type: Array,
+        value: []
+      },
+      flightDetails: {
+        type: Object,
+        //default value???
+      },
+      totalPrice: {
+        type: Number,
+        value: 0
+      }
     };
   }
-  connectedCallback(){
+  connectedCallback() {
     super.connectedCallback();
-    this.travelDetail=JSON.parse(sessionStorage.getItem('travelDetail'));
-    this.flightDetails=JSON.parse(sessionStorage.getItem('flightDetails'))
-    this.totalPrice=parseFloat(this.travelDetail.length,10)*parseFloat(this.flightDetails.price,10)
+    this.travelDetail = JSON.parse(sessionStorage.getItem('travelDetail'));
+    this.flightDetails = JSON.parse(sessionStorage.getItem('flightDetails'))
+    this.totalPrice = parseFloat(this.travelDetail.length, 10) * parseFloat(this.flightDetails.price, 10)
   }
-  //_handleBack() is fired when back button is clicked
-  _handleBack(){
-    this.set('route.path','/book')
+  /**
+   * @description: _handleBack() is fired when back button is clicked
+   */
+  _handleBack() {
+    this.set('route.path', '/book')
   }
   //_handleClick() is fired when proceed to pay button is clicked
-  _handleClick()
-  {
-    this.set('route.path','/payments')
+  _handleClick() {
+    this.set('route.path', '/payments')
   }
 }
 
