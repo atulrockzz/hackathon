@@ -45,12 +45,12 @@
           let appLocation = element.$.location
           expect(appLocation.route).to.equal(element.route)
         });
-        // it('should render app-route', () => {
-        //   let appRoute = elementShadowRoot.querySelector('app-route')
-        //   expect(appRoute.route).to.equal(element.route)
-        //   expect(appRoute.data).to.equal(element.routeData)
-        //   expect(appRoute.tail).to.equal(element.subRoute)
-        // })
+        it('should render app-route', () => {
+          let appRoute = elementShadowRoot.querySelector('app-route')
+          expect(appRoute.route).to.equal(element.route)
+          expect(appRoute.data).to.equal(element.routeData)
+          expect(appRoute.tail).to.equal(element.subRoute)
+        })
       //   it('should render iron-ajax', () => {
       //     let ironAjax = elementShadowRoot.querySelector('iron-ajax')
       //     expect(ironAjax).to.be.exist
