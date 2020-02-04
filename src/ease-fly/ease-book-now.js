@@ -52,7 +52,7 @@ class EaseBookNow extends PolymerElement {
           <td> <paper-input class="age" > </paper-input></td>
           <td><paper-radio-group class="gender">
             <paper-radio-button name="male">Male</paper-radio-button>
-            <paper-radio-button name="female">female</paper-radio-button>
+            <paper-radio-button name="female">Female</paper-radio-button>
           </paper-radio-group></td>
           <td> <paper-input class="email"> </paper-input></td>
       </tr>
@@ -85,7 +85,7 @@ class EaseBookNow extends PolymerElement {
   *creating a object of all the travellers and pushing it to session storage
   */ 
   _handleClick(){
-    // sessionStorage.clear('travelDetail');
+    sessionStorage.removeItem('travelDetail');
     let name=this.shadowRoot.querySelectorAll('.name');
     let age=this.shadowRoot.querySelectorAll('.age');
     let gender=this.shadowRoot.querySelectorAll('.gender');

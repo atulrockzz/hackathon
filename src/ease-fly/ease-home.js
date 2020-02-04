@@ -24,6 +24,17 @@ class EaseFly extends PolymerElement {
         box-sizing: border-box;
         font-size: 1.2em;
     }
+    #myBookings
+    {
+    height:40px;
+    font-size: 1em;
+    border:2px solid gray;
+    padding-left:5px;
+    }
+    #myBookings,#booking-btn
+    {
+        float:right;
+    }
     #noOfTraveller
     {
         top:0%;
@@ -74,6 +85,8 @@ class EaseFly extends PolymerElement {
         width: 120px;
     }
 </style>
+<paper-button on-click="_handleMyBookings" id="booking-btn" raised>Check Your Bookings</paper-button>
+<input id="myBookings" type="text" placeholder="Enter ReferenceID" />
 <ajax-call id="ajax"></ajax-call>
 <app-location route="{{route}}"></app-location>
 <paper-radio-group selected="oneWay" id="tripType">
@@ -145,7 +158,7 @@ class EaseFly extends PolymerElement {
         return {
             flightsList: {
                 type: Array,
-                value: [{ flightName: "abc", startTime: "856", endTime: "sdfsd", price: "400" }, { flightName: "abc", startTime: "856", endTime: "sdfsd", price: "400" }]
+                value: []
             },
             data: {
                 type: Object,
@@ -159,7 +172,7 @@ class EaseFly extends PolymerElement {
     }
     //_handleFilter is used to filter the list of flights on the basis of flight name
     _handleFilter(event) {
-        let j = 0, flightName = [];
+        let j = 0, flightName=[];
         let filter = this.shadowRoot.querySelectorAll('paper-checkbox')
         for (let i = 0; i < filter.length; i++) {
             if (filter[i].checked) {
@@ -212,6 +225,7 @@ class EaseFly extends PolymerElement {
     }
     //_handleBook is 
     _handleBook(event) {
+        sessionStorage.removeItem('flightDetails')
         this.data.flightName = event.model.item.flightName
         this.data.startTime = event.model.item.startTime
         this.data.endTime = event.model.item.endTime
@@ -252,6 +266,11 @@ class EaseFly extends PolymerElement {
         {
             return `${day}`
         }
+    }
+    _handleMyBookings(){
+        let myBookingId=this.$.myBookings.value;
+        sessionStorage.setItem('myBookingId',myBookingId);
+        this.set('route.path','./confirmed')
     }
 }
 

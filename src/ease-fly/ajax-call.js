@@ -39,6 +39,7 @@ class AjaxCall extends PolymerElement {
 * */
   _handleResponse(event) {
     const data = event.detail.response
+    console.log(event.detail.response)
     //All the response has been handled through switch case by dispatching event details to the parent
     switch (this.action) {
       case 'search': this.dispatchEvent(new CustomEvent('search-flights', { bubbles: true, composed: true, detail: { data } }))
@@ -46,6 +47,8 @@ class AjaxCall extends PolymerElement {
       case 'filter': this.dispatchEvent(new CustomEvent('filter-flights', { bubbles: true, composed: true, detail: { data } }))
         break;
       case 'booking-confirmed': this.dispatchEvent(new CustomEvent('booking-confirmed', { bubbles: true, composed: true, detail: { data } }))
+        break;
+      case 'myBookings': this.dispatchEvent(new CustomEvent('myBookings', { bubbles: true, composed: true, detail: { data } }))
         break;
       default:
 
