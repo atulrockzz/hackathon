@@ -1,7 +1,7 @@
 {
   "npm": true,
   "entrypoint": "index.html",
-  "shell": "src/polymer-3-hackathon-app/polymer-3-hackathon-app.js",
+  "shell": "src/ease-fly/ease-fly.js",
   "sources": [
     "src/**/*",
     "manifest/**",
